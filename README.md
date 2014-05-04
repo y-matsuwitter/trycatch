@@ -13,15 +13,22 @@ package main
 
 import "github.com/y-matsuwitter/trycatch"
 
+type MyError struct {
+	error
+}
+
 func main() {
 	trycatch.TryCatch{}.Try(func() {
 		println("do something buggy")
-		b := 0
-		panic(1 / b)
-	}).Catch(func(err error) {
+		panic(MyError{})
+	}).Catch(MyError{}, func(err error) {
+		println("catch MyError")
+	}).CatchAll(func(err error) {
 		println("catch error")
-		println(err.Error())
+	}).Finally(func() {
+		println("finally do something")
 	})
+	println("done")
 }
 
 ```
